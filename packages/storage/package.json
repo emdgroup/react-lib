@@ -1,0 +1,19 @@
+{
+  "name": "@emdgroup/react-storage",
+  "version": "1.0.0",
+  "description": "React hooks for convenient access to localStorage and sessionStorage APIs",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "scripts": {
+    "docs:build": "rm -rf docs README.md && yarn --silent typedoc --hideInPageTOC --excludeNotDocumented --disableSources --theme ../../node_modules/typedoc-github-wiki-theme/dist src/index.ts",
+    "docs": "npm run docs:build && cp docs/Exports.md README.md",
+    "prepack": "yarn docs && rm -rf dist && tsc"
+  },
+  "files": ["dist"],
+  "keywords": ["react", "localstorage", "sessionstorage"],
+  "author": "Moritz Onken <onken@netcubed.de>",
+  "license": "Apache-2.0",
+  "peerDependencies": {
+    "react": ">= 17"
+  }
+}

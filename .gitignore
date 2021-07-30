@@ -1,0 +1,6 @@
+packages/**/package-lock.json
+tsconfig.tsbuildinfo
+dist/
+node_modules/
+docs/
+*.tgz
