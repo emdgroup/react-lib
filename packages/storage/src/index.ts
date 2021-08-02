@@ -29,7 +29,7 @@ function useStorage<T>(
         [provider, key]
     );
 
-    if (!item &&  typeof key === 'string') {
+    if (!item && typeof key === 'string') {
         try {
             const item = provider?.getItem(key);
             if (item) {

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    // some bundlers such as Webpack 4 don't support es2020 syntax yet
+    "target": "es2019",
+    "moduleResolution": "node",
+    "jsx": "preserve",
+    "baseUrl": "./",
+    "paths": {
+      "@emdgroup/*": ["./packages/*"],
+    },
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "importsNotUsedAsValues": "error",
+    "outDir": "dist",
+    "rootDir": "bin",
+  }
+}

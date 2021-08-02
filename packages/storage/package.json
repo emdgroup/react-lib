@@ -1,13 +1,19 @@
 {
   "name": "@emdgroup/react-storage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React hooks for convenient access to localStorage and sessionStorage APIs",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "homepage": "https://github.com/emdgroup/react-lib/tree/main/packages/storage",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/emdgroup/react-lib.git"
+  },
   "scripts": {
-    "docs:build": "rm -rf docs README.md && yarn --silent typedoc --hideInPageTOC --excludeNotDocumented --disableSources --theme ../../node_modules/typedoc-github-wiki-theme/dist src/index.ts",
+    "docs:build": "rm -rf docs README.md && typedoc --hideInPageTOC --excludeNotDocumented --disableSources --theme ../../node_modules/typedoc-github-wiki-theme/dist src/index.ts",
     "docs": "npm run docs:build && cp docs/Exports.md README.md",
-    "prepack": "yarn docs && rm -rf dist && tsc"
+    "prepack": "npm run docs && rm -rf dist && tsc --build --force"
   },
   "files": ["dist"],
   "keywords": ["react", "localstorage", "sessionstorage"],

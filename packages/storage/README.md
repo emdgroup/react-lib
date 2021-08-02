@@ -46,7 +46,7 @@ setItem({ id: 123 }); // fails validation and will not be stored
 
 | Name | Type |
 | :------ | :------ |
-| `key` | `string` |
+| `key` | `string` \| `undefined` |
 | `predicate?` | (`arg`: `unknown`) => arg is T |
 
 #### Returns
@@ -71,7 +71,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `key` | `string` |
+| `key` | `string` \| `undefined` |
 | `predicate?` | (`arg`: `unknown`) => arg is T |
 
 #### Returns
