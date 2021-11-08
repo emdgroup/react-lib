@@ -29,6 +29,8 @@ function base64encode(str: ArrayBuffer): string {
 export interface UserSession {
     /* OAuth access token provided by the IDP */
     accessToken: string;
+    /* OAuth refresh token provided by the IDP */
+    refreshToken?: string;
     /* OAuth ID token provided by the IDP */
     idToken: string;
     /* Epoch time in seconds when the access token expires */
@@ -42,9 +44,9 @@ function isObject(args: unknown): args is Record<string, unknown> {
 function isSession(args: unknown): args is UserSession {
     return isObject(args) &&
         typeof args.accessToken === 'string' &&
+        (typeof args.refreshToken === 'string' || args.refreshToken === undefined) &&
         typeof args.idToken === 'string' &&
-        typeof args.expires === 'number' &&
-        args.expires > Date.now();
+        typeof args.expires === 'number';
 }
 
 interface TokenResponse {
@@ -125,6 +127,8 @@ export interface UserContext {
 
 export const UserContext = createContext<UserContext>({});
 
+/** ## ProviderOptions */
+
 export interface ProviderOptions {
     /** When enabled, the user will automatically be logged in when the page is loaded. Defaults to `false`. */
     autoLogin?: boolean;
@@ -135,6 +139,8 @@ export interface ProviderOptions {
     idpHost?: string;
     /** Overwrite the redirect URI, default to the current hostname + `/auth`. */
     redirectUri?: string;
+    /** Persist and use the refreshToken to renew an expired accessToken. Defaults to `false`. */
+    refreshSession?: boolean;
 }
 
 /**
@@ -163,6 +169,7 @@ export function UserContextProvider({
     clientId,
     idpHost = 'login.emddigital.com',
     redirectUri,
+    refreshSession: refreshSessionOpt = false,
 }: ProviderOptions): JSX.Element {
     const [session, updateSession, clearSession] = useLocalStorage('session', isSession);
 
@@ -219,11 +226,45 @@ export function UserContextProvider({
         )
     );
 
+    const [refreshSession, setRefreshSession] = useState(false);
+    const { status: refreshStatus, response: refreshResponse } = useQuery<TokenResponse>(
+        refreshSession && refreshSessionOpt && session?.refreshToken ? 'POST' : null,
+        `https://${idpHost}/oauth2/token`,
+        querystring.stringify({
+            grant_type: 'refresh_token',
+            client_id: clientId,
+            refresh_token: session?.refreshToken,
+        }),
+        useMemo(
+            () => ({
+                'content-type': 'application/x-www-form-urlencoded',
+            }),
+            []
+        )
+    );
+    useEffect(() => {
+        if (!refreshSession) return;
+        if (!refreshSessionOpt || !session?.refreshToken) return clearSession();
+        if (refreshStatus === 'success' && refreshResponse) {
+            setRefreshSession(false);
+            updateSession({
+                ...session,
+                accessToken: refreshResponse.access_token,
+                idToken: refreshResponse.id_token,
+                expires: Date.now() + refreshResponse.expires_in * 1000,
+            });
+        } else if (refreshStatus === 'error') {
+            setRefreshSession(false);
+            clearSession();
+        }
+    }, [refreshSession, refreshStatus, session, refreshResponse, updateSession, clearSession]);
+
     useEffect(() => {
         if (!session && tokenStatus === 'success' && isTokenResponse(tokenResponse)) {
             clearKey();
             updateSession({
                 accessToken: tokenResponse.access_token,
+                refreshToken: refreshSessionOpt ? tokenResponse.refresh_token : undefined,
                 idToken: tokenResponse.id_token,
                 expires: Date.now() + tokenResponse.expires_in * 1000,
             });
@@ -241,12 +282,17 @@ export function UserContextProvider({
         entrypoint,
         code,
         updateSession,
+        refreshSessionOpt,
     ]);
 
     const authHeader = useMemo((): Record<string, string> => (session ? { Authorization: `Bearer ${session.accessToken}` } : {}), [session]);
 
+    useEffect(() => {
+        if (session && session.expires <= Date.now()) setRefreshSession(true);
+    }, [session]);
+
     const { status: userInfoStatus, response: userInfoResponse, revalidate } = useCachedQuery<any>(
-        session && !code ? 'GET' : null,
+        session && session.expires > Date.now() && !code ? 'GET' : null,
         `https://${idpHost}/oauth2/userinfo`,
         '',
         authHeader,
@@ -262,12 +308,12 @@ export function UserContextProvider({
                 givenName: userInfoResponse.given_name,
                 sub: userInfoResponse.sub,
             });
-        } else if (userInfoStatus === 'error') clearSession();
+        } else if (userInfoStatus === 'error') setRefreshSession(true);
     }, [userInfo, userInfoStatus, setUserInfo, userInfoResponse, clearSession]);
 
     useEffect(() => {
         if (session) {
-            if (userInfoStatus === 'error') clearSession();
+            if (userInfoStatus === 'error') setRefreshSession(true);
         } else if (
             document.location.pathname.split('/').pop() === 'auth' &&
             document.location.search.length > 1

@@ -1,5 +1,6 @@
 ## Interfaces
 
+- [ProviderOptions](#ProviderOptions)
 - [UserContext](#UserContext)
 - [UserInfo](#UserInfo)
 
@@ -37,7 +38,7 @@ function Content(): JSX.Element {
 
 | Name | Type |
 | :------ | :------ |
-| `__namedParameters` | `ProviderOptions` |
+| `__namedParameters` | [`ProviderOptions`](#ProviderOptions) |
 
 #### Returns
 
@@ -120,6 +121,49 @@ Function to log the user out.
 #### Returns
 
 `void`
+
+
+## ProviderOptions
+
+## Properties
+
+### autoLogin
+
+• `Optional` **autoLogin**: `boolean`
+
+When enabled, the user will automatically be logged in when the page is loaded. Defaults to `false`.
+
+___
+
+### clientId
+
+• **clientId**: `string`
+
+Client ID as provided by the IdP.
+
+___
+
+### idpHost
+
+• `Optional` **idpHost**: `string`
+
+Overwrite the IdP host, defaults to `login.emddigital.com`.
+
+___
+
+### redirectUri
+
+• `Optional` **redirectUri**: `string`
+
+Overwrite the redirect URI, default to the current hostname + `/auth`.
+
+___
+
+### refreshSession
+
+• `Optional` **refreshSession**: `boolean`
+
+Persist and use the refreshToken to renew an expired accessToken. Defaults to `false`.
 
 
 ## UserInfo

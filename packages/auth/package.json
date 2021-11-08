@@ -1,6 +1,6 @@
 {
   "name": "@emdgroup/react-auth",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "React hooks implementing the Authorization Code Grant Flow with PKCE.",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -12,7 +12,7 @@
   },
   "scripts": {
     "docs:build": "rm -rf docs README.md && typedoc --hideInPageTOC --excludeNotDocumented --disableSources --theme ../../node_modules/typedoc-github-wiki-theme/dist src/index.tsx",
-    "docs": "npm run docs:build && ts-node ../../bin/merge-docs Exports.md UserContext.md userInfo.md",
+    "docs": "npm run docs:build && ts-node ../../bin/merge-docs Exports.md UserContext.md ProviderOptions.md userInfo.md",
     "prepack": "npm run docs && rm -rf dist && tsc --build --force"
   },
   "files": ["dist"],
