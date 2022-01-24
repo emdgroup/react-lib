@@ -165,6 +165,14 @@ ___
 
 Persist and use the refreshToken to renew an expired accessToken. Defaults to `false`.
 
+___
+
+### userInfoEndpoint
+
+• `Optional` **userInfoEndpoint**: `string`
+
+Overwrite the userinfo endpoint, defaults to `/oauth2/userinfo`.
+
 
 ## UserInfo
 

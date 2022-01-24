@@ -137,6 +137,8 @@ export interface ProviderOptions {
     clientId: string;
     /** Overwrite the IdP host, defaults to `login.emddigital.com`. */
     idpHost?: string;
+    /** Overwrite the userinfo endpoint, defaults to `/oauth2/userinfo`. */
+    userInfoEndpoint?: string;
     /** Overwrite the redirect URI, default to the current hostname + `/auth`. */
     redirectUri?: string;
     /** Persist and use the refreshToken to renew an expired accessToken. Defaults to `false`. */
@@ -168,6 +170,7 @@ export function UserContextProvider({
     children,
     clientId,
     idpHost = 'login.emddigital.com',
+    userInfoEndpoint = '/oauth2/userinfo',
     redirectUri,
     refreshSession: refreshSessionOpt = false,
 }: ProviderOptions): JSX.Element {
@@ -293,7 +296,7 @@ export function UserContextProvider({
 
     const { status: userInfoStatus, response: userInfoResponse, revalidate } = useCachedQuery<any>(
         session && session.expires > Date.now() && !code ? 'GET' : null,
-        `https://${idpHost}/oauth2/userinfo`,
+        userInfoEndpoint.startsWith('/') ? `https://${idpHost}${userInfoEndpoint}` : userInfoEndpoint,
         '',
         authHeader,
     );
