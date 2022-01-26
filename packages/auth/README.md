@@ -151,6 +151,14 @@ Overwrite the IdP host, defaults to `login.emddigital.com`.
 
 ___
 
+### prompt
+
+• `Optional` **prompt**: ``"login"``
+
+Whether the authorization server prompts the user for re-authentication.
+
+___
+
 ### redirectUri
 
 • `Optional` **redirectUri**: `string`

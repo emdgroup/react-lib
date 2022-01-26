@@ -143,6 +143,8 @@ export interface ProviderOptions {
     redirectUri?: string;
     /** Persist and use the refreshToken to renew an expired accessToken. Defaults to `false`. */
     refreshSession?: boolean;
+    /** Whether the authorization server prompts the user for re-authentication. */
+    prompt?: 'login';
 }
 
 /**
@@ -173,6 +175,7 @@ export function UserContextProvider({
     userInfoEndpoint = '/oauth2/userinfo',
     redirectUri,
     refreshSession: refreshSessionOpt = false,
+    prompt,
 }: ProviderOptions): JSX.Element {
     const [session, updateSession, clearSession] = useLocalStorage('session', isSession);
 
@@ -201,8 +204,9 @@ export function UserContextProvider({
                 redirect_uri: redirectUri || `${document.location.origin}/auth`,
                 code_challenge_method: 'S256',
                 code_challenge: challenge,
+                prompt,
             });
-    }, [setKey, idpHost, clientId, redirectUri, setEntrypoint]);
+    }, [setKey, idpHost, clientId, redirectUri, setEntrypoint, prompt]);
 
     const logout = useCallback((): void => {
         clearSession();
@@ -260,7 +264,7 @@ export function UserContextProvider({
             setRefreshSession(false);
             clearSession();
         }
-    }, [refreshSession, refreshStatus, session, refreshResponse, updateSession, clearSession]);
+    }, [refreshSession, refreshStatus, session, refreshResponse, updateSession, clearSession, refreshSessionOpt]);
 
     useEffect(() => {
         if (!session && tokenStatus === 'success' && isTokenResponse(tokenResponse)) {
