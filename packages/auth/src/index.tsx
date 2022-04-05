@@ -118,7 +118,7 @@ export interface UserContext {
     /** Provides the `UserSession` object if the user is authenticated. */
     session?: UserSession;
     /** Function to initiate the login flow. */
-    login?: (entrypoint?: string) => void;
+    login?: (opts?: { entrypoint?: string }) => void;
     /** Function to log the user out. */
     logout?: () => void;
     /** Convenience header object containing the `Authorization` header value set to the access token. */
@@ -187,7 +187,9 @@ export function UserContextProvider({
 
     const [userInfo, setUserInfo] = useState<UserInfo>();
 
-    const login = useCallback(async (entrypoint?: string): Promise<void> => {
+    const login = useCallback(async (
+        { entrypoint }: { entrypoint?: string } = {}
+    ): Promise<void> => {
         const newKey = await generateVerifier();
         const encodedKey = base64encode(newKey);
         setKey(encodedKey);
