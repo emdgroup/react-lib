@@ -135,6 +135,8 @@ export interface ProviderOptions {
     children: React.ReactNode;
     /** Client ID as provided by the IdP. */
     clientId: string;
+    /** Domain name to directly forward a user to the login page for a certain auth domain. */
+    domainHint?: string;
     /** Overwrite the IdP host, defaults to `login.emddigital.com`. */
     idpHost?: string;
     /** Overwrite the userinfo endpoint, defaults to `/oauth2/userinfo`. */
@@ -171,6 +173,7 @@ export function UserContextProvider({
     autoLogin = false,
     children,
     clientId,
+    domainHint,
     idpHost = 'login.emddigital.com',
     userInfoEndpoint = '/oauth2/userinfo',
     redirectUri,
@@ -199,6 +202,7 @@ export function UserContextProvider({
             `https://${idpHost}/oauth2/authorize?` +
             querystring.stringify({
                 client_id: clientId,
+                domain_hint: domainHint,
                 response_type: 'code',
                 scope: 'openid email',
                 redirect_uri: redirectUri || `${document.location.origin}/auth`,
@@ -206,7 +210,7 @@ export function UserContextProvider({
                 code_challenge: challenge,
                 prompt,
             });
-    }, [setKey, idpHost, clientId, redirectUri, setEntrypoint, prompt]);
+    }, [setKey, idpHost, clientId, domainHint, redirectUri, setEntrypoint, prompt]);
 
     const logout = useCallback((): void => {
         clearSession();
