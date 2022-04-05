@@ -143,6 +143,14 @@ Client ID as provided by the IdP.
 
 ___
 
+### domainHint
+
+• **domainHint**: `string`
+
+Domain name to directly forward a user to the login page for a certain auth domain.
+
+___
+
 ### idpHost
 
 • `Optional` **idpHost**: `string`
