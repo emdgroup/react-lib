@@ -213,7 +213,7 @@ export function UserContextProvider({
         setUserInfo(undefined);
     }, [clearSession]);
 
-    const origin = typeof window ? window.location.origin : '';
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
 
     const { status: tokenStatus, response: tokenResponse } = useQuery<TokenResponse>(
         code && key ? 'POST' : null,
