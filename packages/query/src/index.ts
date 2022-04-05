@@ -109,16 +109,16 @@ export function useCachedQuery<T>(
  * if you want to prevent the browser to make requests or redirects that will fail. Note that this
  * is not a reliable way to determine if the user is online. See
  * [`navigator.onLine`](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/onLine) for more details.
- * 
+ *
  * This hook will listen to changes to the online status and will update accordingly.
- * 
+ *
  * ```ts
  * const online = useOnlineStatus();
  * ```
  */
 
 export function useOnlineStatus(): boolean {
-    const [online, setOnline] = useState(navigator.onLine ?? true);
+    const [online, setOnline] = useState(typeof navigator !== 'undefined' ? (navigator.onLine ?? true) : true);
     const onlineCb = useCallback(() => setOnline(navigator.onLine), []);
     useEffect(() => {
         if ('onLine' in navigator) {
