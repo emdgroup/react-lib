@@ -95,14 +95,11 @@ function isString(arg: unknown): arg is string {
  *
  * Object representing the options for the login function of the UserContext.
  */
-export type LoginOptions = {
-    /* Entrypoint to redirect the user to after successful authentication */
-    entrypoint?: string
-    /* Perform redirect after successful authentication (default: true) */
-    redirect: true
-} | {
-    entrypoint?: never
-    redirect: false
+export interface LoginOptions {
+    /** Entrypoint to redirect the user to after successful authentication. Defaults to the URL that the user initially visited. */
+    entrypoint?: string;
+    /** Perform redirect after successful authentication, default to `true`. */
+    redirect?: boolean;
 }
 
 /**
@@ -112,13 +109,13 @@ export type LoginOptions = {
  */
 
 export interface UserInfo {
-    /* Email address */
+    /** Email address */
     email: string;
-    /* Given name of provided */
+    /** Given name of provided */
     givenName?: string;
-    /* Family name of provided */
+    /** Family name of provided */
     familyName?: string;
-    /* Subject identifier */
+    /** Subject identifier */
     sub: string;
 }
 
@@ -156,7 +153,7 @@ export interface ProviderOptions {
     idpHost?: string;
     /** Overwrite the userinfo endpoint, defaults to `/oauth2/userinfo`. */
     userInfoEndpoint?: string;
-    /** Overwrite the redirect URI, default to the current hostname + `/auth`. */
+    /** Overwrite the redirect URI, defaults to the current hostname + `/auth`. */
     redirectUri?: string;
     /** Persist and use the refreshToken to renew an expired accessToken. Defaults to `false`. */
     refreshSession?: boolean;
@@ -206,7 +203,7 @@ export function UserContextProvider({
     const [userInfo, setUserInfo] = useState<UserInfo>();
 
     const login = useCallback(async (
-        { entrypoint, redirect }: LoginOptions = { redirect: true }
+        { entrypoint, redirect = true }: LoginOptions = {}
     ): Promise<void> => {
         const newKey = await generateVerifier();
         const encodedKey = base64encode(newKey);
