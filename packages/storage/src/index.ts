@@ -10,7 +10,7 @@ function useStorage<T>(
 ): [T | undefined, (item: T) => void, () => void] {
     const [item, setItem] = useState<T>();
 
-    const provider = typeof window !== 'undefined' && window[engine];
+    const provider = typeof window !== 'undefined' ? window[engine] : undefined;
 
     const updateStorage = useCallback(
         (item: T): void => {

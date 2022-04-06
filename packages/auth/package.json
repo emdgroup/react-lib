@@ -1,6 +1,6 @@
 {
   "name": "@emdgroup/react-auth",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "React hooks implementing the Authorization Code Grant Flow with PKCE.",
   "main": "dist/index.js",
   "module": "dist/index.js",

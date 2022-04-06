@@ -1,5 +1,6 @@
 ## Interfaces
 
+- [LoginOptions](#LoginOptions)
 - [ProviderOptions](#ProviderOptions)
 - [UserContext](#UserContext)
 - [UserInfo](#UserInfo)
@@ -102,9 +103,15 @@ Provides the `UserSession` object if the user is authenticated.
 
 ### login
 
-▸ `Optional` **login**(): `void`
+▸ `Optional` **login**(`opts?`): `void`
 
 Function to initiate the login flow.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `opts?` | [`LoginOptions`](#LoginOptions) |
 
 #### Returns
 
@@ -145,7 +152,7 @@ ___
 
 ### domainHint
 
-• **domainHint**: `string`
+• `Optional` **domainHint**: `string`
 
 Domain name to directly forward a user to the login page for a certain auth domain.
 
@@ -171,7 +178,7 @@ ___
 
 • `Optional` **redirectUri**: `string`
 
-Overwrite the redirect URI, default to the current hostname + `/auth`.
+Overwrite the redirect URI, defaults to the current hostname + `/auth`.
 
 ___
 
@@ -190,6 +197,59 @@ ___
 Overwrite the userinfo endpoint, defaults to `/oauth2/userinfo`.
 
 
+## LoginOptions
+
+Object representing the options for the login function of the UserContext.
+
+## Properties
+
+### entrypoint
+
+• `Optional` **entrypoint**: `string`
+
+Entrypoint to redirect the user to after successful authentication. Defaults to the URL that the user initially visited.
+
+___
+
+### redirect
+
+• `Optional` **redirect**: `boolean`
+
+Perform redirect after successful authentication, default to `true`.
+
+
 ## UserInfo
 
 Object representing the user details as provided by the IdP `userInfo` endpoint.
+
+## Properties
+
+### email
+
+• **email**: `string`
+
+Email address
+
+___
+
+### familyName
+
+• `Optional` **familyName**: `string`
+
+Family name of provided
+
+___
+
+### givenName
+
+• `Optional` **givenName**: `string`
+
+Given name of provided
+
+___
+
+### sub
+
+• **sub**: `string`
+
+Subject identifier
