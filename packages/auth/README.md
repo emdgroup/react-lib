@@ -4,6 +4,7 @@
 - [ProviderOptions](#ProviderOptions)
 - [UserContext](#UserContext)
 - [UserInfo](#UserInfo)
+- [UserSession](#UserSession)
 
 ## Variables
 
@@ -95,7 +96,7 @@ ___
 
 ### session
 
-• `Optional` **session**: `UserSession`
+• `Optional` **session**: [`UserSession`](#UserSession)
 
 Provides the `UserSession` object if the user is authenticated.
 
@@ -216,6 +217,43 @@ ___
 • `Optional` **redirect**: `boolean`
 
 Perform redirect after successful authentication, default to `true`.
+
+
+## UserSession
+
+Object containing the OIDC tokens and expiration time.
+
+## Properties
+
+### accessToken
+
+• **accessToken**: `string`
+
+OAuth access token provided by the IDP
+
+___
+
+### expires
+
+• **expires**: `number`
+
+Epoch time in seconds when the access token expires
+
+___
+
+### idToken
+
+• **idToken**: `string`
+
+OAuth ID token provided by the IDP
+
+___
+
+### refreshToken
+
+• `Optional` **refreshToken**: `string`
+
+OAuth refresh token provided by the IDP
 
 
 ## UserInfo

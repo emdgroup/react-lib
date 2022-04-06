@@ -11,8 +11,8 @@
     "url": "https://github.com/emdgroup/react-lib.git"
   },
   "scripts": {
-    "docs:build": "rm -rf docs README.md && typedoc --hideInPageTOC --excludeNotDocumented --disableSources --theme ../../node_modules/typedoc-github-wiki-theme/dist src/index.tsx",
-    "docs": "npm run docs:build && ts-node ../../bin/merge-docs Exports.md UserContext.md ProviderOptions.md LoginOptions.md UserInfo.md",
+    "docs:build": "rm -rf docs README.md && typedoc --hideInPageTOC --excludeNotDocumented --disableSources --theme github-wiki src/index.tsx",
+    "docs": "npm run docs:build && ts-node ../../bin/merge-docs Exports.md UserContext.md ProviderOptions.md LoginOptions.md UserSession.md UserInfo.md",
     "prepack": "npm run docs && rm -rf dist && tsc --build --force"
   },
   "files": [

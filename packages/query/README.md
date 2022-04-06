@@ -15,7 +15,7 @@ to either `success` or `error`.
 
 ### querystring
 
-• `Const` **querystring**: `Object`
+• `Const` **querystring**: `Object` = `qs`
 
 Implementation of the [NodeJS `querystring`](https://nodejs.org/docs/latest-v12.x/api/querystring.html) module for the browser.
 
@@ -42,9 +42,9 @@ The response is cached in the browser's localStorage (if available).
 
 | Name | Type |
 | :------ | :------ |
-| `method` | `Method` \| ``null`` |
+| `method` | ``null`` \| `Method` |
 | `path` | `string` |
-| `body?` | `Body` \| `string` |
+| `body?` | `string` \| `Body` |
 | `headers?` | `Object` |
 
 #### Returns
@@ -115,9 +115,9 @@ function useApi<T>(...[method, path, body]: Parameters<typeof useQuery>) {
 
 | Name | Type |
 | :------ | :------ |
-| `method` | `Method` \| ``null`` |
+| `method` | ``null`` \| `Method` |
 | `path` | `string` |
-| `body?` | `Body` \| `string` |
+| `body?` | `string` \| `Body` |
 | `headers?` | `Object` |
 
 #### Returns
@@ -153,7 +153,7 @@ ___
 
 ### status
 
-• `Optional` **status**: [`QueryStatus`](../wiki/Exports#querystatus)
+• `Optional` **status**: [`QueryStatus`](#querystatus)
 
 Status of the request
 

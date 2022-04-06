@@ -26,14 +26,19 @@ function base64encode(str: ArrayBuffer): string {
         .replace(/=/g, '');
 }
 
+/**
+ * ## UserSession
+ *
+ * Object containing the OIDC tokens and expiration time.
+ */
 export interface UserSession {
-    /* OAuth access token provided by the IDP */
+    /** OAuth access token provided by the IDP */
     accessToken: string;
-    /* OAuth refresh token provided by the IDP */
+    /** OAuth refresh token provided by the IDP */
     refreshToken?: string;
-    /* OAuth ID token provided by the IDP */
+    /** OAuth ID token provided by the IDP */
     idToken: string;
-    /* Epoch time in seconds when the access token expires */
+    /** Epoch time in seconds when the access token expires */
     expires: number;
 }
 
