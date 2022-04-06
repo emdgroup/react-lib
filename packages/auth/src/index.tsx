@@ -91,6 +91,21 @@ function isString(arg: unknown): arg is string {
 }
 
 /**
+ * ## LoginOptions
+ *
+ * Object representing the options for the login function of the UserContext.
+ */
+export type LoginOptions = {
+    /* Entrypoint to redirect the user to after successful authentication */
+    entrypoint?: string
+    /* Perform redirect after successful authentication (default: true) */
+    redirect: true
+} | {
+    entrypoint?: never
+    redirect: false
+}
+
+/**
  * ## UserInfo
  *
  * Object representing the user details as provided by the IdP `userInfo` endpoint.
@@ -118,7 +133,7 @@ export interface UserContext {
     /** Provides the `UserSession` object if the user is authenticated. */
     session?: UserSession;
     /** Function to initiate the login flow. */
-    login?: (opts?: { entrypoint?: string }) => void;
+    login?: (opts?: LoginOptions) => void;
     /** Function to log the user out. */
     logout?: () => void;
     /** Convenience header object containing the `Authorization` header value set to the access token. */
@@ -188,13 +203,15 @@ export function UserContextProvider({
     const [userInfo, setUserInfo] = useState<UserInfo>();
 
     const login = useCallback(async (
-        { entrypoint }: { entrypoint?: string } = {}
+        { entrypoint, redirect }: LoginOptions = { redirect: true }
     ): Promise<void> => {
         const newKey = await generateVerifier();
         const encodedKey = base64encode(newKey);
         setKey(encodedKey);
-        // make sure to keep query string and hash
-        setEntrypoint(entrypoint ?? document.location.href.slice(document.location.origin.length));
+        if (redirect) {
+            // make sure to keep query string and hash
+            setEntrypoint(entrypoint || document.location.href.slice(document.location.origin.length));
+        }
         const challenge = base64encode(await sha256(encodedKey));
 
         document.location.href =
