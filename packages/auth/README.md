@@ -104,7 +104,7 @@ Provides the `UserSession` object if the user is authenticated.
 
 ### getLoginUrl
 
-▸ `Optional` **getLoginUrl**(`opts?`): `void`
+▸ `Optional` **getLoginUrl**(`opts?`): `Promise<string>`
 
 Function to generate the login URL.
 
@@ -116,7 +116,7 @@ Function to generate the login URL.
 
 #### Returns
 
-`string`
+`Promise<string>`
 
 ### login
 
