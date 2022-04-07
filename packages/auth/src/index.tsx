@@ -66,11 +66,6 @@ interface IdpResponse {
   code: string;
 }
 
-interface IdpErrorResponse {
-  error: string;
-  error_description: string;
-}
-
 function isTokenResponse(args: unknown): args is TokenResponse {
     return isObject(args) &&
         typeof args.access_token === 'string' &&
@@ -83,12 +78,6 @@ function isTokenResponse(args: unknown): args is TokenResponse {
 
 function isIdpResponse(args: unknown): args is IdpResponse {
     return isObject(args) && typeof args.code === 'string';
-}
-
-function isIdpErrorResponse(args: unknown): args is IdpErrorResponse {
-    return isObject(args) &&
-        typeof args.error === 'string' &&
-        typeof args.error_description === 'string';
 }
 
 function isString(arg: unknown): arg is string {
@@ -130,6 +119,8 @@ export interface UserInfo {
  * The user context object is returned by the `useUser` hook.
  */
 export interface UserContext {
+    /** Function to generate the login URL. */
+    getLoginUrl?: (opts?: LoginOptions) => Promise<string>;
     /** Provides the `UserInfo` object if the user is authenticated. */
     info?: UserInfo;
     /** Provides the `UserSession` object if the user is authenticated. */
@@ -207,9 +198,9 @@ export function UserContextProvider({
 
     const [userInfo, setUserInfo] = useState<UserInfo>();
 
-    const login = useCallback(async (
+    const getLoginUrl = useCallback(async (
         { entrypoint, redirect = true }: LoginOptions = {}
-    ): Promise<void> => {
+    ) => {
         const newKey = await generateVerifier();
         const encodedKey = base64encode(newKey);
         setKey(encodedKey);
@@ -219,8 +210,7 @@ export function UserContextProvider({
         }
         const challenge = base64encode(await sha256(encodedKey));
 
-        document.location.href =
-            `https://${idpHost}/oauth2/authorize?` +
+        return `https://${idpHost}/oauth2/authorize?` +
             querystring.stringify({
                 client_id: clientId,
                 domain_hint: domainHint,
@@ -232,6 +222,14 @@ export function UserContextProvider({
                 prompt,
             });
     }, [setKey, idpHost, clientId, domainHint, redirectUri, setEntrypoint, prompt]);
+
+    const login = useCallback(async (
+        options: LoginOptions = {}
+    ): Promise<void> => {
+        const loginUrl = await getLoginUrl(options);
+
+        document.location.href = loginUrl;
+    }, [getLoginUrl]);
 
     const logout = useCallback((): void => {
         clearSession();
@@ -359,13 +357,14 @@ export function UserContextProvider({
         <UserContext.Provider
             value={useMemo(() => {
                 return {
+                    getLoginUrl,
                     info: userInfo,
                     session,
                     login,
                     logout,
                     authHeader,
                 };
-            }, [session, userInfo, login, logout, authHeader])}
+            }, [getLoginUrl, userInfo, session, login, logout, authHeader])}
         >{!autoLogin || userInfo ? children : null}</UserContext.Provider>
     );
 }
