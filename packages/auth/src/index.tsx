@@ -103,7 +103,7 @@ function isString(arg: unknown): arg is string {
 export interface LoginOptions {
     /** Entrypoint to redirect the user to after successful authentication. Defaults to the URL that the user initially visited. */
     entrypoint?: string;
-    /** Perform redirect after successful authentication, default to `true`. */
+    /** Automatically redirect the user to the login URL and to the entrypoint after successful authentication. Disabling this will disable all redirects. Defaults to `false`. */
     redirect?: boolean;
 }
 
@@ -140,6 +140,8 @@ export interface UserContext {
     logout?: () => void;
     /** Convenience header object containing the `Authorization` header value set to the access token. */
     authHeader?: { [key: string]: string };
+    /** Set to the URL that the user is redirected to initiate the authorization flow. Useful when you need to start the login flow in a separate window or tab. Use in combination with `login({ refresh: false })`. */
+    loginUrl?: string;
 }
 
 export const UserContext = createContext<UserContext>({});
@@ -207,6 +209,7 @@ export function UserContextProvider({
 
     const [userInfo, setUserInfo] = useState<UserInfo>();
 
+    const [loginUrl, setLoginUrl] = useState<string>();
     const login = useCallback(async (
         { entrypoint, redirect = true }: LoginOptions = {}
     ): Promise<void> => {
@@ -219,18 +222,21 @@ export function UserContextProvider({
         }
         const challenge = base64encode(await sha256(encodedKey));
 
-        document.location.href =
-            `https://${idpHost}/oauth2/authorize?` +
-            querystring.stringify({
-                client_id: clientId,
-                domain_hint: domainHint,
-                response_type: 'code',
-                scope: 'openid email',
-                redirect_uri: redirectUri || `${document.location.origin}/auth`,
-                code_challenge_method: 'S256',
-                code_challenge: challenge,
-                prompt,
-            });
+        const url = `https://${idpHost}/oauth2/authorize?` +
+        querystring.stringify({
+            client_id: clientId,
+            domain_hint: domainHint,
+            response_type: 'code',
+            scope: 'openid email',
+            redirect_uri: redirectUri || `${document.location.origin}/auth`,
+            code_challenge_method: 'S256',
+            code_challenge: challenge,
+            prompt,
+        });
+
+        setLoginUrl(url);
+
+        if (redirect) document.location.href = url;
     }, [setKey, idpHost, clientId, domainHint, redirectUri, setEntrypoint, prompt]);
 
     const logout = useCallback((): void => {
@@ -294,6 +300,7 @@ export function UserContextProvider({
     useEffect(() => {
         if (!session && tokenStatus === 'success' && isTokenResponse(tokenResponse)) {
             clearKey();
+            setLoginUrl(undefined);
             updateSession({
                 accessToken: tokenResponse.access_token,
                 refreshToken: refreshSessionOpt ? tokenResponse.refresh_token : undefined,
@@ -309,6 +316,7 @@ export function UserContextProvider({
         session,
         clearEntrypoint,
         clearKey,
+        setLoginUrl,
         tokenStatus,
         tokenResponse,
         entrypoint,
@@ -364,8 +372,9 @@ export function UserContextProvider({
                     login,
                     logout,
                     authHeader,
+                    loginUrl,
                 };
-            }, [session, userInfo, login, logout, authHeader])}
+            }, [session, userInfo, login, logout, authHeader, loginUrl])}
         >{!autoLogin || userInfo ? children : null}</UserContext.Provider>
     );
 }
