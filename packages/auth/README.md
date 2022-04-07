@@ -102,6 +102,22 @@ Provides the `UserSession` object if the user is authenticated.
 
 ## Methods
 
+### getLoginUrl
+
+▸ `Optional` **getLoginUrl**(`opts?`): `Promise<string>`
+
+Function to generate the login URL.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `opts?` | [`LoginOptions`](#LoginOptions) |
+
+#### Returns
+
+`Promise<string>`
+
 ### login
 
 ▸ `Optional` **login**(`opts?`): `void`
