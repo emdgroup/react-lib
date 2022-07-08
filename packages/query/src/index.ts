@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import qs from './qs';
+import qs from './qs.js';
 import { useLocalStorage } from '@emdgroup/react-storage';
 
 /**

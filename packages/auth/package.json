@@ -1,10 +1,11 @@
 {
   "name": "@emdgroup/react-auth",
-  "version": "1.4.0",
+  "version": "1.5.2",
   "description": "React hooks implementing the Authorization Code Grant Flow with PKCE.",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.js",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": "./dist/index.js",
+  "types": "dist/index.d.ts",
   "homepage": "https://github.com/emdgroup/react-lib/tree/main/packages/auth",
   "repository": {
     "type": "git",
@@ -30,7 +31,7 @@
     "react": ">= 17"
   },
   "dependencies": {
-    "@emdgroup/react-query": "^1.0.0",
-    "@emdgroup/react-storage": "^1.0.0"
+    "@emdgroup/react-query": "^1.0.4",
+    "@emdgroup/react-storage": "^1.0.3"
   }
 }

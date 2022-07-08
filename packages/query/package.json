@@ -1,9 +1,10 @@
 {
   "name": "@emdgroup/react-query",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "React hooks for the fetch API with support for client-side caching",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": "./dist/index.js",
   "types": "dist/index.d.ts",
   "homepage": "https://github.com/emdgroup/react-lib/tree/main/packages/query",
   "repository": {
@@ -15,14 +16,21 @@
     "docs": "npm run docs:build && ts-node ../../bin/merge-docs Exports.md QueryResponse.md",
     "prepack": "npm run docs && rm -rf dist && tsc --build --force"
   },
-  "files": ["dist"],
-  "keywords": ["react", "query", "fetch", "cache"],
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "react",
+    "query",
+    "fetch",
+    "cache"
+  ],
   "author": "Moritz Onken <onken@netcubed.de>",
   "license": "Apache-2.0",
   "peerDependencies": {
     "react": ">= 17"
   },
   "dependencies": {
-    "@emdgroup/react-storage": "^1.0.1"
+    "@emdgroup/react-storage": "^1.0.3"
   }
 }

@@ -94,6 +94,14 @@ Provides the `UserInfo` object if the user is authenticated.
 
 ___
 
+### loginUrl
+
+• `Optional` **loginUrl**: `string`
+
+Set to the URL that the user is redirected to initiate the authorization flow. Useful when you need to start the login flow in a separate window or tab. Use in combination with `login({ refresh: false })`.
+
+___
+
 ### session
 
 • `Optional` **session**: [`UserSession`](#UserSession)
@@ -216,7 +224,7 @@ ___
 
 • `Optional` **redirect**: `boolean`
 
-Perform redirect after successful authentication, default to `true`.
+Automatically redirect the user to the login URL and to the entrypoint after successful authentication. Disabling this will disable all redirects. Defaults to `false`.
 
 
 ## UserSession
