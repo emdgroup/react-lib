@@ -15,6 +15,7 @@ function Profile() {
   if (error) return 'Unknown error';
   return `Hello ${response?.email}`;
 }
+```
 
 ## Lazy Queries
 
@@ -22,6 +23,7 @@ To enable a query at a later time (for example if the query depends on a previou
 the method can be set to `null` which will effectively defer the query until the query
 method is defined.
 
+```tsx
 function ToDos() {
   const [filter, setFilter] = useState(false);
   const { response } = useQuery('/todos', { method: filter ? 'GET' : null });

@@ -16,6 +16,7 @@
  *   if (error) return 'Unknown error';
  *   return `Hello ${response?.email}`;
  * }
+ * ```
  *
  * ## Lazy Queries
  *
@@ -23,6 +24,7 @@
  * the method can be set to `null` which will effectively defer the query until the query
  * method is defined.
  *
+ * ```tsx
  * function ToDos() {
  *   const [filter, setFilter] = useState(false);
  *   const { response } = useQuery('/todos', { method: filter ? 'GET' : null });
