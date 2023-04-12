@@ -334,7 +334,7 @@ export function UserContextProvider({
     const { status: userInfoStatus, response: userInfoResponse, revalidate } = useCachedQuery<any>(
         session && session.expires > Date.now() && !code ? 'GET' : null,
         userInfoEndpoint.startsWith('/') ? `https://${idpHost}${userInfoEndpoint}` : userInfoEndpoint,
-        '',
+        undefined,
         authHeader,
     );
 
