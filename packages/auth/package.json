@@ -1,6 +1,6 @@
 {
   "name": "@emdgroup/react-auth",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "React hooks implementing the Authorization Code Grant Flow with PKCE.",
   "type": "module",
   "main": "./dist/index.js",
@@ -31,7 +31,7 @@
     "react": ">= 17"
   },
   "dependencies": {
-    "@emdgroup/react-query": "^1.0.4",
+    "@emdgroup/react-query": "^1.1.0",
     "@emdgroup/react-storage": "^1.0.3"
   }
 }
