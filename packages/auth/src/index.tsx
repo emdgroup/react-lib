@@ -166,6 +166,10 @@ export interface ProviderOptions {
     refreshSession?: boolean;
     /** Whether the authorization server prompts the user for re-authentication. */
     prompt?: 'login';
+    /** Request a type of multi-factor authentication. Currently, `mfa` is the only supported value. */
+    acrValues?: string;
+    /** Additional query parameters, such as `state=xyz`. */
+    additionalParameters?: string;
 }
 
 /**
@@ -198,6 +202,8 @@ export function UserContextProvider({
     redirectUri,
     refreshSession: refreshSessionOpt = false,
     prompt,
+    acrValues,
+    additionalParameters,
 }: ProviderOptions): JSX.Element {
     const [session, updateSession, clearSession] = useLocalStorage('session', isSession);
 
@@ -232,12 +238,14 @@ export function UserContextProvider({
             code_challenge_method: 'S256',
             code_challenge: challenge,
             prompt,
+            acr_values: acrValues,
+            ...(additionalParameters ? querystring.parse(additionalParameters) : undefined),
         });
 
         setLoginUrl(url);
 
         if (redirect) document.location.href = url;
-    }, [setKey, idpHost, clientId, domainHint, redirectUri, setEntrypoint, prompt]);
+    }, [setKey, idpHost, clientId, domainHint, redirectUri, setEntrypoint, prompt, acrValues, additionalParameters]);
 
     const logout = useCallback((): void => {
         clearSession();

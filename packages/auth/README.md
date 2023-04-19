@@ -6,12 +6,6 @@
 - [UserInfo](#UserInfo)
 - [UserSession](#UserSession)
 
-## Variables
-
-### UserContext
-
-• **UserContext**: `Context`<[`UserContext`](#usercontext)\>
-
 ## Functions
 
 ### UserContextProvider
@@ -50,7 +44,7 @@ ___
 
 ### useUser
 
-▸ **useUser**(): [`UserContext`](#usercontext)
+▸ **useUser**(): `UserContext`
 
 Returns the user context previously established with `UserContextProvider`.
 
@@ -65,7 +59,7 @@ useEffect(() => {
 
 #### Returns
 
-[`UserContext`](#usercontext)
+`UserContext`
 
 
 ## UserContext
@@ -94,11 +88,49 @@ Provides the `UserInfo` object if the user is authenticated.
 
 ___
 
+### login
+
+• `Optional` **login**: (`opts?`: [`LoginOptions`](#LoginOptions)) => `void`
+
+#### Type declaration
+
+▸ (`opts?`): `void`
+
+Function to initiate the login flow.
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `opts?` | [`LoginOptions`](#LoginOptions) |
+
+##### Returns
+
+`void`
+
+___
+
 ### loginUrl
 
 • `Optional` **loginUrl**: `string`
 
 Set to the URL that the user is redirected to initiate the authorization flow. Useful when you need to start the login flow in a separate window or tab. Use in combination with `login({ refresh: false })`.
+
+___
+
+### logout
+
+• `Optional` **logout**: () => `void`
+
+#### Type declaration
+
+▸ (): `void`
+
+Function to log the user out.
+
+##### Returns
+
+`void`
 
 ___
 
@@ -108,40 +140,26 @@ ___
 
 Provides the `UserSession` object if the user is authenticated.
 
-## Methods
-
-### login
-
-▸ `Optional` **login**(`opts?`): `void`
-
-Function to initiate the login flow.
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `opts?` | [`LoginOptions`](#LoginOptions) |
-
-#### Returns
-
-`void`
-
-___
-
-### logout
-
-▸ `Optional` **logout**(): `void`
-
-Function to log the user out.
-
-#### Returns
-
-`void`
-
 
 ## ProviderOptions
 
 ## Properties
+
+### acrValues
+
+• `Optional` **acrValues**: `string`
+
+Request a type of multi-factor authentication. Currently, `mfa` is the only supported value.
+
+___
+
+### additionalParameters
+
+• `Optional` **additionalParameters**: `string`
+
+Additional query parameters, such as `state=xyz`.
+
+___
 
 ### autoLogin
 
