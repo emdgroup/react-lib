@@ -10,7 +10,7 @@ import React, {
 import { useQuery, useWindowFocus, useCachedQuery, querystring } from '@emdgroup/react-query';
 import { useLocalStorage, useSessionStorage } from '@emdgroup/react-storage';
 
-async function generateVerifier(size = 16): Promise<Uint8Array> {
+async function generateVerifier(size = 32): Promise<Uint8Array> {
     const randomBytes = new Uint8Array(size);
     return crypto.getRandomValues(randomBytes);
 }
@@ -37,7 +37,7 @@ export interface UserSession {
     /** OAuth refresh token provided by the IDP */
     refreshToken?: string;
     /** OAuth ID token provided by the IDP */
-    idToken: string;
+    idToken?: string;
     /** Epoch time in seconds when the access token expires */
     expires: number;
 }
@@ -49,8 +49,8 @@ function isObject(args: unknown): args is Record<string, unknown> {
 function isSession(args: unknown): args is UserSession {
     return isObject(args) &&
         typeof args.accessToken === 'string' &&
-        (typeof args.refreshToken === 'string' || args.refreshToken === undefined) &&
-        typeof args.idToken === 'string' &&
+        isStringOrUndefined(args.refreshToken) &&
+        isStringOrUndefined(args.idToken) &&
         typeof args.expires === 'number';
 }
 
@@ -58,7 +58,7 @@ interface TokenResponse {
   access_token: string;
   refresh_token: string;
   id_token: string;
-  token_type: 'Bearer';
+  token_type: string;
   expires_in: number;
 }
 
@@ -71,13 +71,16 @@ interface IdpErrorResponse {
   error_description: string;
 }
 
+function isStringOrUndefined(arg: unknown): arg is string | undefined | null {
+    return typeof arg === 'string' || arg === undefined || arg === null;
+}
+
 function isTokenResponse(args: unknown): args is TokenResponse {
     return isObject(args) &&
         typeof args.access_token === 'string' &&
-        typeof args.refresh_token === 'string' &&
-        typeof args.id_token === 'string' &&
+        isStringOrUndefined(args.refresh_token) &&
+        isStringOrUndefined(args.id_token) &&
         typeof args.token_type === 'string' &&
-        args.token_type === 'Bearer' &&
         typeof args.expires_in === 'number';
 }
 
@@ -113,7 +116,7 @@ export interface LoginOptions {
  * Object representing the user details as provided by the IdP `userInfo` endpoint.
  */
 
-export interface UserInfo {
+export interface UserInfo extends Record<string, unknown> {
     /** Email address */
     email: string;
     /** Given name of provided */
@@ -351,10 +354,9 @@ export function UserContextProvider({
     useEffect(() => {
         if (!userInfo && (userInfoStatus === 'success')) {
             setUserInfo({
-                email: userInfoResponse.email,
                 familyName: userInfoResponse.family_name,
                 givenName: userInfoResponse.given_name,
-                sub: userInfoResponse.sub,
+                ...userInfoResponse,
             });
         } else if (userInfoStatus === 'error') setRefreshSession(true);
     }, [userInfo, userInfoStatus, setUserInfo, userInfoResponse, clearSession]);

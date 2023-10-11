@@ -269,7 +269,7 @@ ___
 
 ### idToken
 
-• **idToken**: `string`
+• `Optional` **idToken**: `string`
 
 OAuth ID token provided by the IDP
 
@@ -285,6 +285,12 @@ OAuth refresh token provided by the IDP
 ## UserInfo
 
 Object representing the user details as provided by the IdP `userInfo` endpoint.
+
+## Hierarchy
+
+- `Record`<`string`, `unknown`\>
+
+  ↳ **`UserInfo`**
 
 ## Properties
 
