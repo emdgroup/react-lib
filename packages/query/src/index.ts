@@ -123,6 +123,8 @@ export interface RequestOptions {
     retry?: number;
     /** Milliseconds to wait before the next request is retried. Subsequent requests will be multiplied by `Math.LOG2E`. A random jitter of 50% of the `retryMs` value is applied. */
     retryMs?: number;
+    /** Make an attempt to parse the body. If the content type of the response is application/json, body is a JSON object, text otherwise. Set to false if you need to read the response yourself. Defaults to true. */
+    parseBody?: boolean;
 }
 
 function parseRequestArguments(args: unknown[]): [path: string, options: RequestOptions] {
@@ -143,7 +145,7 @@ export async function request<T>(
     input: string,
     args: RequestOptions = { },
 ): Promise<{ response: Response; body?: T; error?: Error }> {
-    const { retry = 3, retryMs = 250, signal, queryParameters = {} } = args;
+    const { retry = 3, retryMs = 250, signal, parseBody = true, queryParameters = {} } = args;
     const qs = new URLSearchParams(queryParameters);
     const body = args.body?.constructor === Object ? JSON.stringify(args.body) : args.body;
     const res = await fetch(`${qs}` ? `${input}?${qs}` : input, {
@@ -163,10 +165,11 @@ export async function request<T>(
         signal,
     ).then(() => request(input, { ...args, retryMs: retryMs * Math.LOG2E, retry: retry - 1 }));
 
-    const text = await res.text();
+    if (parseBody === false) return { response: res };
+
     try {
-        const body = text.length ? JSON.parse(text) : text;
-        return { response: res, body: body };
+        const body = res.headers.get('content-type')?.includes('application/json') ? res.json() : res.text();
+        return { response: res, body: await body };
     } catch (err: unknown) {
         return { response: res, error: err instanceof Error ? err : new Error('unknown error') };
     }
@@ -373,6 +376,7 @@ export function useQuery<T>(...args: unknown[]): QueryResponse<T> {
                     if (cancelled) return;
                     if (res.ok) {
                         setResponse(body);
+                        setError(undefined);
                         setStatus('success');
                     } else {
                         if (err) setError(err);
