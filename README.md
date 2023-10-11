@@ -33,3 +33,10 @@ npm -w @emdgroup/react-query run docs
 
 This will update the `README.md` file with the latest documentation generated from the source code. Do not edit `README.md` directly.
 
+To publish a new version, change into the package directory and run:
+
+```bash
+# `minor` for new features, `patch` for bug fixes
+npm version minor
+npm publish --access public
+```

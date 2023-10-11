@@ -290,6 +290,14 @@ A string to indicate whether the request will use CORS, or will be restricted to
 
 ___
 
+### parseBody
+
+• `Optional` **parseBody**: `boolean`
+
+Make an attempt to parse the body. If the content type of the response is application/json, body is a JSON object, text otherwise. Set to false if you need to read the response yourself. Defaults to true.
+
+___
+
 ### queryParameters
 
 • `Optional` **queryParameters**: `URLSearchParams` \| `Record`<`string`, `string`\>
