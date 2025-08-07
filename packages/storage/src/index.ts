@@ -14,7 +14,7 @@ function useStorage<T>(
 
     const updateStorage = useCallback(
         (item: T): void => {
-            if (pred !== undefined && !pred(item)) return;
+            if (pred && !pred(item)) return;
             if (provider && typeof key === 'string') provider.setItem(key, JSON.stringify(item));
             setItem(item);
         },
@@ -29,7 +29,7 @@ function useStorage<T>(
         [provider, key]
     );
 
-    if (!item && typeof key === 'string') {
+    if (item === undefined && typeof key === 'string') {
         try {
             const item = provider?.getItem(key) ?? null;
             if (typeof item === 'string') {
