@@ -14,14 +14,14 @@ function useStorage<T>(
 
     const updateStorage = useCallback(
         (item: T): void => {
-            if (pred && !pred(item)) return;
+            if (pred !== undefined && !pred(item)) return;
             if (provider && typeof key === 'string') provider.setItem(key, JSON.stringify(item));
             setItem(item);
         },
         [provider, key, pred]
     );
 
-    const clearSession = useCallback(
+    const clearStorage = useCallback(
         (): void => {
             if (provider &&  typeof key === 'string') provider.removeItem(key);
             setItem(undefined);
@@ -31,12 +31,12 @@ function useStorage<T>(
 
     if (!item && typeof key === 'string') {
         try {
-            const item = provider?.getItem(key);
-            if (item) {
+            const item = provider?.getItem(key) ?? null;
+            if (typeof item === 'string') {
                 const session = JSON.parse(item);
                 if (!pred || pred(session)) {
                     setItem(session);
-                    return [session, updateStorage, clearSession];
+                    return [session, updateStorage, clearStorage];
                 }
             }
         } catch (err) {
@@ -45,7 +45,7 @@ function useStorage<T>(
         }
     }
 
-    return [item, updateStorage, clearSession];
+    return [item, updateStorage, clearStorage];
 }
 
 

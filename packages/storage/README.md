@@ -44,10 +44,10 @@ setItem({ id: 123 }); // fails validation and will not be stored
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `key` | `undefined` \| `string` |
-| `predicate?` | (`arg`: `unknown`) => arg is T |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `key` | `undefined` \| `string` | The key to store the value under. |
+| `predicate?` | (`arg`: `unknown`) => arg is T | A function to determine if the value should be stored. |
 
 #### Returns
 
@@ -69,10 +69,10 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `key` | `undefined` \| `string` |
-| `predicate?` | (`arg`: `unknown`) => arg is T |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `key` | `undefined` \| `string` | The key to store the value under. |
+| `predicate?` | (`arg`: `unknown`) => arg is T | A function to determine if the value should be stored. |
 
 #### Returns
 
