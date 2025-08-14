@@ -77,3 +77,54 @@ ___
 #### Returns
 
 [`T` \| `undefined`, (`item`: `T`) => `void`, () => `void`]
+
+___
+
+### useSyncLocalStorage
+
+▸ **useSyncLocalStorage**<`T`\>(`key`, `predicate?`): [`T` \| `undefined`, (`item`: `T`) => `void`, () => `void`]
+
+`useSyncLocalStorage` and `useSyncSessionStorage` are similar to `useLocalStorage` and `useSessionStorage`, but they also
+synchronize changes across different components in the application, sharing the same key.
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `key` | `undefined` \| `string` | The key to store the value under. |
+| `predicate?` | (`arg`: `unknown`) => arg is T | A function to determine if the value should be stored. |
+
+#### Returns
+
+[`T` \| `undefined`, (`item`: `T`) => `void`, () => `void`]
+
+___
+
+### useSyncSessionStorage
+
+▸ **useSyncSessionStorage**<`T`\>(`key`, `predicate?`): [`T` \| `undefined`, (`item`: `T`) => `void`, () => `void`]
+
+`useSyncSessionStorage` uses the sessionStorage API instead of the localStorage API.
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `T` |
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `key` | `undefined` \| `string` | The key to store the value under. |
+| `predicate?` | (`arg`: `unknown`) => arg is T | A function to determine if the value should be stored. |
+
+#### Returns
+
+[`T` \| `undefined`, (`item`: `T`) => `void`, () => `void`]
