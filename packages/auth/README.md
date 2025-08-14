@@ -42,6 +42,80 @@ function Content(): JSX.Element {
 
 ___
 
+### getAccessToken
+
+▸ **getAccessToken**(`__namedParameters`): `Promise`<`string`\>
+
+Return a valid access token for the current user. If the stored session is expired and a refresh token
+is available, the function attempts to refresh the session automatically. If the user is not authenticated,
+it rejects with an error. On refresh failure, the stored session is cleared.
+
+```ts
+const token = await getAccessToken({
+  idpHost: 'login.emddigital.com',
+  clientId: 'my-client-id',
+});
+fetch('/api/resource', { headers: { Authorization: `Bearer ${token}` } });
+```
+
+**`Throws`**
+
+Error when the user is not authenticated (no stored session).
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `__namedParameters` | `Object` |
+| `__namedParameters.clientId` | `string` |
+| `__namedParameters.idpHost` | `string` |
+| `__namedParameters.signal?` | `AbortSignal` |
+
+#### Returns
+
+`Promise`<`string`\>
+
+Promise that resolves to a bearer access token string.
+
+___
+
+### refreshSession
+
+▸ **refreshSession**(`__namedParameters`): `Promise`<[`UserSession`](#UserSession)\>
+
+Exchange a refresh token for a new session using the OAuth 2.0 refresh_token grant.
+
+This function deduplicates concurrent calls: multiple invocations while a refresh is in progress
+will share the same promise. On success, it updates localStorage with the new session and emits
+a storage event to synchronize other tabs/components.
+
+```ts
+const session = await refreshSession({
+  idpHost: 'login.emddigital.com',
+  clientId: 'my-client-id',
+  refreshToken,
+});
+// session.accessToken, session.expires, ...
+```
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `__namedParameters` | `Object` |
+| `__namedParameters.clientId` | `string` |
+| `__namedParameters.idpHost` | `string` |
+| `__namedParameters.refreshToken` | `string` |
+| `__namedParameters.signal?` | `AbortSignal` |
+
+#### Returns
+
+`Promise`<[`UserSession`](#UserSession)\>
+
+Promise that resolves to the renewed UserSession.
+
+___
+
 ### useUser
 
 ▸ **useUser**(): `UserContext`
