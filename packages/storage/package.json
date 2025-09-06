@@ -1,6 +1,6 @@
 {
   "name": "@emdgroup/react-storage",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "React hooks for convenient access to localStorage and sessionStorage APIs",
   "type": "module",
   "main": "./dist/index.js",

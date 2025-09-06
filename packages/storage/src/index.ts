@@ -90,7 +90,11 @@ function useStorage<T>({
     const provider = typeof window !== 'undefined' ? window[engine] : undefined;
 
     const updateStorageCb = useCallback(
-        (item: T): void => setItem({ provider, key, item, predicate, sync }),
+        (item: T): void => {
+            if (predicate && !predicate(item)) return;
+            setItem({ provider, key, item, sync });
+            if (!sync) setLocalItem(item);
+        },
         [provider, key, predicate, sync]
     );
 
