@@ -286,7 +286,9 @@ export function UserContextProvider({
             });
             if (code && entrypoint) {
                 clearEntrypoint();
-                document.location.replace(entrypoint);
+                window.history.replaceState(null, '', entrypoint);
+                // Let SPA routers listening to popstate react to the URL change
+                window.dispatchEvent(new PopStateEvent('popstate'));
             }
         }
     }, [
